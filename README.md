@@ -40,24 +40,20 @@ This project is a simple React-based User Management Dashboard that demonstrates
 ## Installation
 
 1. **Clone the Repository:**
-   - git clone https://github.com/whoisexcel/minidashboard.git
-
-# or
-
-- git clone git@github.com:whoisexcel/minidashboard.git
-- cd minidashboard
+ - git clone https://github.com/whoisexcel/minidashboard.git or git clone git@github.com:whoisexcel/minidashboard.git
+ - cd minidashboard
 
 2. **Install Dependencies:**
 
-   - npm install # or yarn install
+ - npm install # or yarn install
 
 3. **Run the Application:**
-   - npm start or yarn start
+ - npm start or yarn start
 
 ## Usage
 
-- Visit http://localhost:3000/dashboard
+ - Visit http://localhost:3000/dashboard
 
 ## Technologies Used
 
-- React, React Query (TanStack Query), Axios, React Router, Tailwind CSS, TypeScript
+ - React, React Query (TanStack Query), Axios, React Router, Tailwind CSS, TypeScript
