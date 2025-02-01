@@ -1,83 +1,145 @@
-import { useState } from "react";
-import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
+import React, { useState, useMemo } from "react";
+import Pagination from "./Pagination";
 import DebouncedInput from "../utils/DebouncedInput";
 
-const Table = ({ data, onEdit, onDelete }: any) => {
-  const [sortBy, setSortBy] = useState<"name" | "email" | null>(null);
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [search, setSearch] = useState(""); // Keep search state
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
 
-  const filteredData = data.filter((item: any) =>
-    item.name.toLowerCase().includes(search.toLowerCase())
+interface TableProps {
+  data: User[];
+  onEdit: (user: User) => void;
+  onDelete: (id: number) => void;
+  onView: (user: User) => void;
+}
+
+const Table: React.FC<TableProps> = ({ data, onEdit, onDelete, onView }) => {
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [sortBy, setSortBy] = useState<keyof User | null>(null);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [search, setSearch] = useState("");
+
+  const filteredData = useMemo(
+    () =>
+      data.filter((user) =>
+        Object.values(user).some((value) =>
+          String(value).toLowerCase().includes(search.toLowerCase())
+        )
+      ),
+    [data, search]
   );
 
-  const sortedData = [...filteredData].sort((a, b) => {
-    if (!sortBy) return 0;
-    const valueA = a[sortBy];
-    const valueB = b[sortBy];
-    return sortOrder === "asc" ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
-  });
+  const sortedData = useMemo(() => {
+    if (!sortBy) return filteredData;
+    return [...filteredData].sort((a, b) => {
+      const valueA = String(a[sortBy]).toLowerCase();
+      const valueB = String(b[sortBy]).toLowerCase();
+      return sortOrder === "asc"
+        ? valueA.localeCompare(valueB)
+        : valueB.localeCompare(valueA);
+    });
+  }, [filteredData, sortBy, sortOrder]);
 
-  const handleSort = (column: "name" | "email") => {
+  const totalPages = Math.ceil(sortedData.length / rowsPerPage);
+
+  const displayedData = useMemo(
+    () => sortedData.slice((page - 1) * rowsPerPage, page * rowsPerPage),
+    [sortedData, page, rowsPerPage]
+  );
+
+  const handlePageChange = (newPage: number) => setPage(newPage);
+  const handleRowsPerPageChange = (newRowsPerPage: number) => {
+    setRowsPerPage(newRowsPerPage);
+    setPage(1);
+  };
+  const handleSort = (column: keyof User) => {
     setSortBy(column);
-    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+    setSortOrder(sortBy === column && sortOrder === "asc" ? "desc" : "asc");
   };
 
   return (
-    <div className="overflow-x-auto">
-      {/* Use DebouncedInput instead of the normal input */}
-      <div className="mb-3">
-      <DebouncedInput
-        value={search}
-        onChange={setSearch} // This will update the search state
-        placeholder="Search by name"
-      />
-      </div>
-      <table className="min-w-full bg-white border-collapse shadow-lg rounded-lg overflow-hidden">
-        <thead>
-          <tr className="bg-gray-100 text-left">
-            <th
-              className="p-3 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-200"
-              onClick={() => handleSort("name")}
-            >
-              Name
-              {sortBy === "name" && (sortOrder === "asc" ? <FaSortUp className="inline ml-2" /> : <FaSortDown className="inline ml-2" />)}
-              {sortBy !== "name" && <FaSort className="inline ml-2" />}
-            </th>
-            <th
-              className="p-3 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-200"
-              onClick={() => handleSort("email")}
-            >
-              Email
-              {sortBy === "email" && (sortOrder === "asc" ? <FaSortUp className="inline ml-2" /> : <FaSortDown className="inline ml-2" />)}
-              {sortBy !== "email" && <FaSort className="inline ml-2" />}
-            </th>
-            <th className="p-3 text-sm font-medium text-gray-700">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedData.map((user: any) => (
-            <tr key={user.id} className="border-t hover:bg-gray-50">
-              <td className="p-3 text-sm font-medium text-gray-700">{user.name}</td>
-              <td className="p-3 text-sm font-medium text-gray-700">{user.email}</td>
-              <td className="p-3 text-sm font-medium text-gray-700">
-                <button
-                  onClick={() => onEdit(user)}
-                  className="bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 transition"
+    <div>
+      <div className="overflow-x-auto shadow-md rounded-lg bg-white p-4">
+        <DebouncedInput
+          value={search}
+          onChange={setSearch}
+          placeholder="Search users..."
+          // className="mb-3 w-full p-2 border rounded"
+        />
+        <table className="min-w-full table-auto text-left border-collapse">
+          <thead className="bg-gray-50 border-b">
+            <tr>
+              {["sn", "name", "email"].map((key) => (
+                <th
+                  key={key}
+                  className="py-3 px-4 text-sm font-semibold text-gray-600 cursor-pointer"
+                  onClick={() => handleSort(key as keyof User)}
                 >
-                  Edit
-                </button>
-                <button
-                  onClick={() => onDelete(user.id)}
-                  className="ml-2 bg-red-500 text-white py-1 px-3 rounded-md hover:bg-red-600 transition"
-                >
-                  Delete
-                </button>
-              </td>
+                  {key.toUpperCase()}{" "}
+                  {sortBy === key ? (sortOrder === "asc" ? "▲" : "▼") : ""}
+                </th>
+              ))}
+              <th className="py-3 px-4 text-sm font-semibold text-gray-600">
+                Actions
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {displayedData.length > 0 ? (
+              displayedData.map((user) => (
+                <tr key={user.id} className="border-b hover:bg-gray-50">
+                  <td className="py-3 px-4 text-sm text-gray-800">{user.id}</td>
+                  <td className="py-3 px-4 text-sm text-gray-800">
+                    {user.name}
+                  </td>
+                  <td className="py-3 px-4 text-sm text-gray-800">
+                    {user.email}
+                  </td>
+                  <td className="py-3 px-4 text-sm text-gray-800">
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => onEdit(user)}
+                        className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-md transition"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => onDelete(user.id)}
+                        className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-md transition"
+                      >
+                        Delete
+                      </button>
+                      <button
+                        onClick={() => onView(user)}
+                        className="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-md transition"
+                      >
+                        View
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4} className="py-4 text-center text-gray-500">
+                  No users found matching your search.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handlePageChange}
+        onRowsPerPageChange={handleRowsPerPageChange}
+      />
     </div>
   );
 };
