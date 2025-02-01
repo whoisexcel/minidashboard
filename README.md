@@ -11,15 +11,13 @@ This project is a simple React-based User Management Dashboard that demonstrates
   - Sort the table by clicking on the column headers.
   - Filter the user list using a debounced search input.
 - **Pagination:**
-  - The table handles pagination internally.
+  - The table handles pagination internally on the client side.
 - **Routing & Navigation:**
   - The project uses React Router for navigation between the dashboard and a user details page.
 - **Styling:**
   - Styled using Tailwind CSS.
 
 > **Note:** JSONPlaceholder returns successful responses on POST, PUT/PATCH, and DELETE requests but does not persist changes. To simulate immediate UI updates, the project uses local state updates after mutations.
-
-
 
 ## Features
 
@@ -42,29 +40,24 @@ This project is a simple React-based User Management Dashboard that demonstrates
 ## Installation
 
 1. **Clone the Repository:**
-   git clone https://github.com/yourusername/user-management-dashboard.git
-   cd user-management-dashboard
+   - git clone https://github.com/whoisexcel/minidashboard.git
+
+# or
+
+- git clone git@github.com:whoisexcel/minidashboard.git
+- cd minidashboard
 
 2. **Install Dependencies:**
-   npm install
-   # or
-   yarn install
+
+   - npm install # or yarn install
 
 3. **Run the Application:**
-   npm start
-   # or
-   yarn start
-
+   - npm start or yarn start
 
 ## Usage
 
 - Visit http://localhost:3000/dashboard
 
-
 ## Technologies Used
-- React
-- React Query (TanStack Query)
-- Axios
-- React Router
-- Tailwind CSS
-- TypeScript
+
+- React, React Query (TanStack Query), Axios, React Router, Tailwind CSS, TypeScript
