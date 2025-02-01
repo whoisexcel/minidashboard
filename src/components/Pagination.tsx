@@ -29,8 +29,6 @@ const Pagination: React.FC<PaginationProps> = ({
         >
           <option value={5}>5</option>
           <option value={10}>10</option>
-          <option value={15}>15</option>
-          <option value={20}>20</option>
         </select>
       </div>
 
@@ -42,7 +40,6 @@ const Pagination: React.FC<PaginationProps> = ({
         >
           First
         </button>
-
         <button
           onClick={() => onPageChange(page - 1)}
           disabled={page === 1}
@@ -50,11 +47,9 @@ const Pagination: React.FC<PaginationProps> = ({
         >
           Previous
         </button>
-
         <span className="text-sm">
           Page {page} of {totalPages}
         </span>
-
         <button
           onClick={() => onPageChange(page + 1)}
           disabled={page === totalPages}
@@ -62,7 +57,6 @@ const Pagination: React.FC<PaginationProps> = ({
         >
           Next
         </button>
-
         <button
           onClick={() => onPageChange(totalPages)}
           disabled={page === totalPages}

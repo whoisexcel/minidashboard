@@ -4,14 +4,8 @@ import Sidebar from "../components/Sidebar";
 
 const UserDetails = () => {
   const { id } = useParams();
-  const { data: user, isLoading } = useFetchData<{
-    id: number;
-    name: string;
-    email: string;
-  }>(`users/${id}`);
-  const { data: posts, isLoading: postsLoading } = useFetchData<
-    { id: number; title: string; body: string }[]
-  >(`users/${id}/posts`);
+  const { data: user, isLoading } = useFetchData<{ id: number; name: string; email: string }>(`users/${id}`);
+  const { data: posts, isLoading: postsLoading } = useFetchData<{ id: number; title: string; body: string }[]>(`users/${id}/posts`);
 
   if (isLoading || postsLoading) return <p>Loading...</p>;
 
@@ -21,13 +15,13 @@ const UserDetails = () => {
       <div className="ml-64 p-4">
         <h1 className="text-xl font-bold">User Details</h1>
         <p>
-          <strong>ID:</strong> {user?.id || "loading"}
+          <strong>ID:</strong> {user?.id}
         </p>
         <p>
-          <strong>Name:</strong> {user?.name || "loading"}
+          <strong>Name:</strong> {user?.name}
         </p>
         <p>
-          <strong>Email:</strong> {user?.email || "loading"}
+          <strong>Email:</strong> {user?.email}
         </p>
 
         <h2 className="text-lg font-bold mt-4">Posts</h2>

@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 
-// Custom Debounced Input Component
 interface DebouncedInputProps {
   value: string;
   onChange: (value: string) => void;
-  delay?: number; // Optional delay (default is 500ms)
+  delay?: number;
   placeholder?: string;
 }
 
@@ -16,9 +15,7 @@ const DebouncedInput: React.FC<DebouncedInputProps> = ({ value, onChange, delay 
       setDebouncedValue(value);
     }, delay);
 
-    return () => {
-      clearTimeout(handler);
-    };
+    return () => clearTimeout(handler);
   }, [value, delay]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

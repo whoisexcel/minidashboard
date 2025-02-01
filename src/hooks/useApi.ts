@@ -18,17 +18,9 @@ const deleteData = async (endpoint: string, id: number) => {
   return id;
 };
 
-const editData = async <T>(
-  endpoint: string,
-  id: number,
-  data: T,
-  isPatch = false
-) => {
+const editData = async <T>(endpoint: string, id: number, data: T, isPatch = false) => {
   const method = isPatch ? "patch" : "put";
-  const response = await axios[method](
-    `${API_BASE_URL}/${endpoint}/${id}`,
-    data
-  );
+  const response = await axios[method](`${API_BASE_URL}/${endpoint}/${id}`, data);
   return response.data;
 };
 
@@ -45,7 +37,7 @@ export const usePostData = <T>() => {
     mutationFn: ({ endpoint, data }: { endpoint: string; data: T }) =>
       postData(endpoint, data),
     onSuccess: (_, { endpoint }) => {
-      queryClient.invalidateQueries({ queryKey: [endpoint] }); // ✅ Corrected
+      queryClient.invalidateQueries({ queryKey: [endpoint] });
     },
   });
 };
@@ -56,7 +48,7 @@ export const useDeleteData = () => {
     mutationFn: ({ endpoint, id }: { endpoint: string; id: number }) =>
       deleteData(endpoint, id),
     onSuccess: (_, { endpoint }) => {
-      queryClient.invalidateQueries({ queryKey: [endpoint] }); // ✅ Corrected
+      queryClient.invalidateQueries({ queryKey: [endpoint] });
     },
   });
 };
@@ -76,7 +68,7 @@ export const useEditData = <T>() => {
       isPatch?: boolean;
     }) => editData(endpoint, id, data, isPatch),
     onSuccess: (_, { endpoint }) => {
-      queryClient.invalidateQueries({ queryKey: [endpoint] }); // ✅ Corrected
+      queryClient.invalidateQueries({ queryKey: [endpoint] });
     },
   });
 };

@@ -1,12 +1,25 @@
-import { useState } from "react";
+// src/components/Modal.tsx
+import { useState, useEffect } from "react";
 
-// components/Modal.tsx
-const Modal = ({ isOpen, onClose, onSave, initialData }: any) => {
-  const [userData, setUserData] = useState(initialData || { name: "", email: "" });
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (data: { name: string; email: string }) => void;
+  initialData?: { name: string; email: string };
+}
+
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onSave, initialData }) => {
+  const [userData, setUserData] = useState<{ name: string; email: string }>(
+    initialData || { name: "", email: "" }
+  );
+
+  useEffect(() => {
+    setUserData(initialData || { name: "", email: "" });
+  }, [initialData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setUserData((prev: any) => ({ ...prev, [name]: value }));
+    setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = () => {
@@ -18,7 +31,9 @@ const Modal = ({ isOpen, onClose, onSave, initialData }: any) => {
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-md shadow-lg w-96">
-        <h2 className="text-xl font-semibold mb-4">{initialData ? "Edit User" : "Add User"}</h2>
+        <h2 className="text-xl font-semibold mb-4">
+          {initialData ? "Edit User" : "Add User"}
+        </h2>
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Name</label>
           <input
