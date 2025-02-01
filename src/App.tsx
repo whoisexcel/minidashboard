@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import UserDetails from "./pages/UserDetails";
+import Settings from "./pages/Settings";
 
 function App() {
   return (
@@ -8,7 +9,8 @@ function App() {
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/users/:id" element={<UserDetails />} />
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+        <Route path="/settings" element={<Settings />} />
+        {/* <Route path="*" element={<Navigate to="/dashboard" />} /> */}
       </Routes>
     </Router>
   );

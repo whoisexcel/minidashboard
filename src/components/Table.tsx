@@ -23,7 +23,6 @@ const Table: React.FC<TableProps> = ({ data, onEdit, onDelete, onView }) => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [search, setSearch] = useState("");
 
-  
   const filteredData = useMemo(
     () =>
       data.filter((user) =>
@@ -65,11 +64,13 @@ const Table: React.FC<TableProps> = ({ data, onEdit, onDelete, onView }) => {
   return (
     <div>
       <div className="overflow-x-auto shadow-md rounded-lg bg-white p-4">
-        <DebouncedInput
-          value={search}
-          onChange={setSearch}
-          placeholder="Search users..."
-        />
+        <div className="mb-4">
+          <DebouncedInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Search users..."
+          />
+        </div>
         <table className="min-w-full table-auto text-left border-collapse">
           <thead className="bg-gray-50 border-b">
             <tr>
@@ -93,7 +94,7 @@ const Table: React.FC<TableProps> = ({ data, onEdit, onDelete, onView }) => {
                   <td className="py-3 px-4 text-sm text-gray-800">{user.name}</td>
                   <td className="py-3 px-4 text-sm text-gray-800">{user.email}</td>
                   <td className="py-3 px-4 text-sm text-gray-800">
-                    <div className="flex space-x-2">
+                    <div className="flex space-x-2 flex-wrap justify-center sm:justify-start">
                       <button
                         onClick={() => onEdit(user)}
                         className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-md transition"
